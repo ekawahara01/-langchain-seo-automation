@@ -3,5 +3,8 @@ pydantic
 openai
 langchain>=0.1.14
 langchain-community>=0.0.20
+notion-client
+python-dotenv
 uvicorn
 PyGithub
+
