@@ -40,5 +40,33 @@ def create_repo(data: RepoRequest):
 
     print(f"✅ [LOG] リポジトリ作成完了: {repo.clone_url}")
     return {"url": repo.clone_url, "status": "created"}
+# すでにある import の下あたりに追加
+from fastapi import FastAPI
+import os
+from datetime import datetime
+from langchain_community.utilities import NotionDB  # 最新のLangChainで利用可能
+
+# FastAPI インスタンスが未定義なら定義（既にある場合はこの行は不要）
+app = FastAPI()
+
+# NotionDB 初期化
+notion = NotionDB(notion_api_key=os.getenv("NOTION_TOKEN"))
+
+# NotionのデータベースID（共有されたもの）
+DATABASE_ID = "1dbdd486fbf08044a694000cae707fde"
+
+@app.get("/test_notion")
+def test_notion():
+    new_data = {
+        "Name": "LangChain Notion連携テスト",  # タイトル列
+        "期限": datetime.now().strftime("%Y-%m-%d"),  # Date型
+        "状態": "進行中"  # セレクト型
+    }
+
+    try:
+        result = notion.create_page(database_id=DATABASE_ID, properties=new_data)
+        return {"status": "success", "url": result.get("url")}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
 
 
