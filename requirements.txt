@@ -4,3 +4,4 @@ openai
 langchain
 langchain-community
 uvicorn
+PyGithub
