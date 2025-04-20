@@ -68,5 +68,41 @@ def test_notion():
         return {"status": "success", "url": result.get("url")}
     except Exception as e:
         return {"status": "error", "detail": str(e)}
+from notion_client import Client
+from datetime import datetime
+
+# Notionクライアントを初期化
+notion = Client(auth=os.getenv("NOTION_TOKEN"))
+
+# テスト書き込みエンドポイント
+@app.get("/test_notion")
+def test_notion():
+    new_data = {
+        "parent": {"database_id": "1dbdd486fbf08044a694000cae707fde"},
+        "properties": {
+            "Name": {
+                "title": [
+                    {
+                        "text": {
+                            "content": "LangChain × Notion テスト"
+                        }
+                    }
+                ]
+            },
+            "期限": {
+                "date": {
+                    "start": datetime.now().strftime("%Y-%m-%d")
+                }
+            },
+            "状態": {
+                "select": {
+                    "name": "進行中"
+                }
+            }
+        }
+    }
+
+    res = notion.pages.create(**new_data)
+    return {"status": "success", "id": res["id"]}
 
 
