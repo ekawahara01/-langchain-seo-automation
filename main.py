@@ -44,7 +44,7 @@ def create_repo(data: RepoRequest):
 from fastapi import FastAPI
 import os
 from datetime import datetime
-from langchain_community.utilities import NotionDB  # 最新のLangChainで利用可能
+from langchain_community.utilities.notion import NotionDB  # 最新のLangChainで利用可能
 
 # FastAPI インスタンスが未定義なら定義（既にある場合はこの行は不要）
 app = FastAPI()
