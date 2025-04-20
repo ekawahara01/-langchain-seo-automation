@@ -7,3 +7,4 @@ notion-client
 python-dotenv
 uvicorn
 PyGithub
+notion-client>=2.2.1
