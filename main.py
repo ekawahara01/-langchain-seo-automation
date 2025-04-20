@@ -3,10 +3,13 @@ from pydantic import BaseModel
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 from github import Github
+from notion_client import Client
+from datetime import datetime
 import os
 
 app = FastAPI()
 
+# ✅ LangChainプロンプト実行用エンドポイント
 class PromptRequest(BaseModel):
     prompt: str
 
@@ -16,6 +19,7 @@ def run_chain(request: PromptRequest):
     response = llm([HumanMessage(content=request.prompt)])
     return {"response": response.content}
 
+# ✅ GitHubリポジトリ作成用エンドポイント
 class RepoRequest(BaseModel):
     repo_name: str
     description: str = "Langchain SEO Auto Repo"
@@ -40,45 +44,16 @@ def create_repo(data: RepoRequest):
 
     print(f"✅ [LOG] リポジトリ作成完了: {repo.clone_url}")
     return {"url": repo.clone_url, "status": "created"}
-# すでにある import の下あたりに追加
-from fastapi import FastAPI
-import os
-from datetime import datetime
-from notion_client import Client  # 最新のLangChainで利用可能
-notion = Client(auth=os.getenv("NOTION_TOKEN"))
-# FastAPI インスタンスが未定義なら定義（既にある場合はこの行は不要）
-app = FastAPI()
 
-# NotionDB 初期化
+# ✅ Notion 接続設定
 notion = Client(auth=os.getenv("NOTION_TOKEN"))
-
-# NotionのデータベースID（共有されたもの）
 DATABASE_ID = "1dbdd486fbf08044a694000cae707fde"
 
+# ✅ Notionテスト用エンドポイント
 @app.get("/test_notion")
 def test_notion():
     new_data = {
-        "Name": "LangChain Notion連携テスト",  # タイトル列
-        "期限": datetime.now().strftime("%Y-%m-%d"),  # Date型
-        "状態": "進行中"  # セレクト型
-    }
-
-    try:
-        result = notion.create_page(database_id=DATABASE_ID, properties=new_data)
-        return {"status": "success", "url": result.get("url")}
-    except Exception as e:
-        return {"status": "error", "detail": str(e)}
-from notion_client import Client
-from datetime import datetime
-
-# Notionクライアントを初期化
-notion = Client(auth=os.getenv("NOTION_TOKEN"))
-
-# テスト書き込みエンドポイント
-@app.get("/test_notion")
-def test_notion():
-    new_data = {
-        "parent": {"database_id": "1dbdd486fbf08044a694000cae707fde"},
+        "parent": {"database_id": DATABASE_ID},
         "properties": {
             "Name": {
                 "title": [
@@ -102,7 +77,11 @@ def test_notion():
         }
     }
 
-    res = notion.pages.create(**new_data)
-    return {"status": "success", "id": res["id"]}
+    try:
+        res = notion.pages.create(**new_data)
+        return {"status": "success", "id": res["id"]}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
+
 
 
