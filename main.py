@@ -45,12 +45,12 @@ from fastapi import FastAPI
 import os
 from datetime import datetime
 from notion_client import Client  # 最新のLangChainで利用可能
-notion = Client(auth=os.getenv("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"))
+notion = Client(auth=os.getenv("NOTION_TOKEN"))
 # FastAPI インスタンスが未定義なら定義（既にある場合はこの行は不要）
 app = FastAPI()
 
 # NotionDB 初期化
-notion = NotionDB(notion_api_key=os.getenv("NOTION_TOKEN"))
+notion = Client(auth=os.getenv("NOTION_TOKEN"))
 
 # NotionのデータベースID（共有されたもの）
 DATABASE_ID = "1dbdd486fbf08044a694000cae707fde"
@@ -72,7 +72,7 @@ from notion_client import Client
 from datetime import datetime
 
 # Notionクライアントを初期化
-notion = Client(auth=os.getenv("NOTION_TOKEN"))
+notion = Client(auth=os.getenv("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"))
 
 # テスト書き込みエンドポイント
 @app.get("/test_notion")
