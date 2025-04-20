@@ -72,7 +72,7 @@ from notion_client import Client
 from datetime import datetime
 
 # Notionクライアントを初期化
-notion = Client(auth=os.getenv("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"))
+notion = Client(auth=os.getenv("NOTION_TOKEN"))
 
 # テスト書き込みエンドポイント
 @app.get("/test_notion")
