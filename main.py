@@ -1,4 +1,9 @@
-# main.py（Notion + GitHub リポジトリ作成 + LangChain 簡易テスト対応）
+
+    print("🔧 [LOG] GitHub API呼び出し前")
+
+    github_token = os.getenv("GITHUB_TOKEN")
+    g = Github(github_token)
+    user = g.get_user()# main.py（Notion + GitHub リポジトリ作成 + LangChain 簡易テスト対応）
 from fastapi import FastAPI
 from pydantic import BaseModel
 from langchain.chat_models import ChatOpenAI
@@ -10,7 +15,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 app = FastAPI()
-
+print("GITHUB_TOKEN:", os.getenv("GITHUB_TOKEN"))
+print("NOTION_TOKEN:", os.getenv("NOTION_TOKEN"))
 # --- LangChain 実行用プロンプト受取 ---
 class PromptRequest(BaseModel):
     prompt: str
@@ -29,11 +35,6 @@ class RepoRequest(BaseModel):
 
 @app.post("/create_repo")
 def create_repo(data: RepoRequest):
-    print("🔧 [LOG] GitHub API呼び出し前")
-
-    github_token = os.getenv("GITHUB_TOKEN")
-    g = Github(github_token)
-    user = g.get_user()
 
     print("📦 [LOG] GitHubユーザー取得済み")
 
