@@ -7,7 +7,8 @@ from github import Github
 from notion_client import Client
 from datetime import datetime
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 app = FastAPI()
 
 # --- LangChain 実行用プロンプト受取 ---
