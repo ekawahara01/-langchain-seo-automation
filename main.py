@@ -1,4 +1,4 @@
-main.py（整理対応版 - Notion構成分類・アーカイブ対応）
+# main.py (整理対応版 - Notion構成分類・アーカイブ対応)
 
 from fastapi import FastAPI, Request from pydantic import BaseModel from langchain.chat_models import ChatOpenAI from langchain.schema import HumanMessage from github import Github from notion_client import Client from datetime import datetime import os from dotenv import load_dotenv
 
